@@ -18,5 +18,9 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^2.0.0"
+  },
+  "dependencies": {
+    "bufferpack": "0.0.6",
+    "socket.io": "^2.1.1"
   }
 }
