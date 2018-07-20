@@ -3,49 +3,19 @@
   <head>
     <meta charset="UTF-8">
     <title>Chatterbox</title>
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
-      div.input-area { height: 40px; background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      div.input-area input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      div.input-area button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #messages { 
-        list-style-type: none;
-        margin: 0;
-        padding: 1rem 0;
-        height: calc(100vh - 40px);
-        overflow: scroll;
-      }
-      #messages li {     
-        padding: 5px 10px;
-        margin: 1rem 5px 1px;
-        clear: both;
-        position: relative;
-        float: left;
-        max-width: 50%;
-        background: #aeaeae;
-        color: #000;
-        border-radius: 15px; 
-      }
-      #messages li:not(.self)::before {
-        content: attr(data-author);
-        position: absolute;
-        font-size: 9px;
-        top: -10px;
-        color: #505050;
-      }
-      #messages li.self { 
-        color: #fff; 
-        background: #2fa3ff; 
-        float: right; 
-        margin: 1px 5px;
-      }
-    </style>
+    <link rel="stylesheet" href="public/firacode/fira_code.css">
+    <link rel="stylesheet" href="public/index.css">
   </head>
   <body>
-    <ul id="messages"></ul>
+    <div class="content-pane">
+      <ul id="messages"></ul>
+      <div class="userlist">
+        <ul class="online"></ul>
+        <ul class="offline"></ul>
+      </div>
+    </div>
     <div class="input-area">
-      <input id="m" autocomplete="off" /><button id="submit" onclick="loop">Send</button>
+      <input id="m" autocomplete="off" placeholder="type message here..." /><button id="submit" onclick="loop">Send</button>
     </div>
     <script>
       // You can also require other files to run in this process
