@@ -128,11 +128,35 @@ Pre: Message string
 Post: null
 Purpose: takes in a string and presents it to the user in chat
 */
-function print( /*String*/ msg) {
+function print( /*String*/ msg, username, timestamp) {
     let li = document.createElement('li');
-    li.innerText = msg;
+    li.innerHTML = msg;
+
+    username = username || 'system';
+
+    li.setAttribute('data-author', username);
+
+    timestamp = timestamp ? new Date(timestamp) : new Date();
+
+    timestamp = [
+        timestamp.getMonth()+1,
+        timestamp.getDate(),
+        timestamp.getFullYear()
+    ].join('/') + ' ' +
+    [
+        timestamp.getHours(),
+        timestamp.getMinutes(),
+        timestamp.getSeconds()
+    ].join(':');
+
+    li.setAttribute('data-timestamp', timestamp);
+
+    if (username === window.username) {
+        li.classList.add('self');
+    }
 
     document.getElementById('messages').appendChild(li);
+    document.getElementById('messages').scrollTo(0, document.getElementById('messages').scrollHeight);
 }
 
 /*
@@ -143,21 +167,7 @@ Purpose: prints out messages for user in chat
 function printMessages( /*Array<Object>*/ arr) {
     arr.map(msg => {
         if (msg[1] === 'ALL' || msg[1] === window.username) {
-            let date = new Date(msg[2] * 1000);
-            date = [
-                date.getMonth()+1,
-                date.getDate(),
-                date.getFullYear()
-            ].join('/') + ' ' +
-            [
-                date.getHours(),
-                date.getMinutes(),
-                date.getSeconds()
-            ].join(':');
-
-            let str = `[${date}] ${msg[0]} : ${msg[3]}`;
-
-            print(str);
+            print(msg[3], msg[0], msg[2] * 1000);
         }
     });
 }
