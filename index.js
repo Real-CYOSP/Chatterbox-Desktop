@@ -25,7 +25,7 @@ socket.on('data', (data) => {
     if (data.hasOwnProperty("USERNAME_ACCEPTED")) {
         if (data.USERNAME_ACCEPTED) {
             printMessages(data.MESSAGES);
-            setInputFlow(loop);
+            setInputFlow(chat);
         } else {
             window.username = '';
             promptUsername();
@@ -39,10 +39,24 @@ socket.on('end', () => {
 
 // In theory this function will take user input, transform it into a message, and send it out;
 function chat() {
-    console.log(getInput());
+    let input = getInput();
+    let now = Math.floor(new Date() / 1000);
+
+    let msg = {
+        MESSAGES: [
+            window.username,
+            "ALL",
+            now,
+            input
+        ]
+    };
+
+    sendMessage(msg);
 }
 
 function printMessages(arr) {
+    console.log(arr);
+
     arr.map(msg => {
         if (msg[1] === 'ALL' || msg[1] === window.username) {
             let date = new Date(msg[2] * 1000);
