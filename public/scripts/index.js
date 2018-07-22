@@ -21,10 +21,12 @@ socket.on('connect', () => {
 
 socket.on('data', (data) => {
     data = JSON.parse(data.substr(4, data.length));
+    console.log(data);
 
     if (data.hasOwnProperty("USERNAME_ACCEPTED")) {
         if (data.USERNAME_ACCEPTED) {
             printMessages(data.MESSAGES);
+            initUsers(data.USER_LIST);
             setInputFlow(loop, false);
             setInputFlow(chat, true);
         } else {
@@ -33,6 +35,10 @@ socket.on('data', (data) => {
         }
     } else if (data.hasOwnProperty("MESSAGES")) {
         printMessages(data.MESSAGES);
+    } else if (data.hasOwnProperty("USERS_JOINED")) {
+        modifyUsers(data.USERS_JOINED, true);
+    } else if (data.hasOwnProperty("USERS_LEFT")) {
+        modifyUsers(data.USERS_LEFT, false);
     }
 });
 
@@ -103,13 +109,81 @@ function getInput() {
 }
 
 /*
+Pre: an array of user objects
+Post: null
+Purpose: takes in a list of user objects on login and appends 
+    them to the appropriate list on screen based off of if the user is active
+*/
+function initUsers(userlist) {
+    let online = document.getElementById('online');
+    let offline = document.getElementById('offline');
+
+    userlist.map(user => {
+        let li = document.createElement('li');
+        li.innerText = user.name;
+
+        if (user.active) {
+            online.appendChild(li);
+        } else {
+            offline.appendChild(li);
+        }
+    })
+}
+
+/*
 Pre: null
 Post: null
-Purpose: Prints user messages to screen when network is unavailable or no other chat function in place
+Purpose: Prints user messages to screen when network is 
+    unavailable or no other chat function in place
 */
 function loop() {
     let message = getInput();
     print(message);
+}
+
+/*
+Pre: array of usernames, and boolean stating if we are adding a user
+Post: null
+Purpose: takes a list of names and if we are adding them removes them from
+    the offline list in view, if applicable, and adds them to the online list. 
+    For removing is is the same process but in the opposite direction
+*/
+function modifyUsers(userlist, add) {
+    let newList;
+    let oldList;
+
+    if (add) {
+        oldList = document.getElementById('offline');
+        newList = document.getElementById('online');
+    } else {
+        oldList = document.getElementById('online');
+        newList = document.getElementById('offline');
+    }
+
+    Array.from(oldList.getElementsByTagName('li')).forEach(user => {
+        userlist.forEach(username => {
+            if (username === user.innerText) {
+                oldList.removeChild(user);
+            }
+        });
+    });
+
+    userlist.forEach(username => {
+        let exists = false;
+
+        Array.from(newList.getElementsByTagName('li')).forEach(user => {
+            if (user.innerText === username) {
+                exists = true;
+            }
+        });
+
+        if (!exists) {
+            let li = document.createElement('li');
+            li.innerText = username;
+
+            newList.appendChild(li);
+        }
+    });
 }
 
 /*
