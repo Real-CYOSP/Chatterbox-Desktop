@@ -7,6 +7,7 @@ const options = {
     ca: [ fs.readFileSync('ca.crt') ]
 };
 
+// Any site you connect to MUST have a pem file and you must supply the corresponding crt
 var socket = tls.connect(9000, 'localhost', options, () => {
     console.log('client connected',
         socket.authorized ? 'authorized' : 'unauthorized');

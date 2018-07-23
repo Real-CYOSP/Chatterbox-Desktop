@@ -40,6 +40,7 @@ div#userlist {
 }
 div#userlist p.label {
     border-bottom: 2px solid;
+    margin-bottom: 2px;
 }
 div#userlist p.label:not(:first-child) {
     margin-top: 1rem;
@@ -50,6 +51,7 @@ div#userlist ul {
 div#userlist ul li {
     color: #00a9e0;
     text-decoration: underline;
+    margin: 1px 0;
 }
 div#userlist ul li:hover {
     color: #ffa500;
