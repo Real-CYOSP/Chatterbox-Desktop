@@ -57,13 +57,21 @@ div#userlist ul li:hover {
     color: #ffa500;
     cursor: pointer;
 }
-ul#messages { 
+div#message-pane {
     height: 100%;
     width: 75%;
+}
+div#channel-bar {
+    background: #828282;
+    padding: 5px 15px;
+    text-align: center;
+}
+ul#messages { 
     list-style-type: none;
-    margin: 0;
-    padding: 1rem 0;
+    margin: 0 0 2.5rem;;
+    padding: 1.5rem 0 1rem;
     overflow: scroll;
+    height: calc(100% - 25px);
 }
 ul#messages li {     
     padding: 5px 10px;

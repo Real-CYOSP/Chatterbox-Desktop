@@ -26,6 +26,7 @@ socket.on('data', (data) => {
 
     if (data.hasOwnProperty("USERNAME_ACCEPTED")) {
         if (data.USERNAME_ACCEPTED) {
+            //setRoom('global');
             printMessages(data.MESSAGES);
             initUsers(data.USER_LIST);
             setInputFlow(loop, false);
@@ -72,13 +73,13 @@ function clearInput() {
 }
 
 /*
-Pre: null
+Pre: keypress (optional)
 Post: null
 Purpose: Get's user input and transforms it into a proper message
 */
 function chat(key) {
     if (!key || key.which === 13) {
-        let input = getInput();
+        let input = (message || getInput());
         let now = Math.floor(new Date() / 1000);
         let audience = window.audience || 'ALL';
 
@@ -241,11 +242,19 @@ Purpose: prints out messages for user in chat
 */
 function printMessages( /*Array<Object>*/ arr) {
     arr.map(msg => {
-        if (msg[1] === 'ALL' || msg[1] === window.username) {
+        if (msg[1] === 'ALL' || msg[0] === window.username && msg[1] === window.username) {
             print(msg[3], msg[0], msg[2] * 1000);
+
+            if (!document.hasFocus()) {
+                new Notification(`New Message from ${msg[0]}`, {
+                    body: msg[3]
+                });
+            }
         }
     });
 }
+
+
 
 /*
 Pre: null
@@ -291,7 +300,11 @@ function setInputFlow( /*Function*/ foo, /*Bool*/ add) {
 }
 
 /*
-
+Pre: A keypress
+Post: Null
+Purpose:weatches the input field and if someone hits the enter key, or if this was
+    called manually via the submit button, then the username is set to whatever is 
+    in the input field, and that username is sent to the server for validati
 */
 function submitUsername(key) {
     if (!key || key.which === 13) {
